@@ -27,8 +27,8 @@ func _ready():
 	
 	$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
 	self.mode = 3
+	print(imageList)
 	
-	$Timer.start()
 	
 func _process(delta):
 	var image = Image.new()
