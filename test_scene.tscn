@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://uctn6t0uu4hq"]
+
+[ext_resource type="Script" path="res://FileDialog.gd" id="1_0c2w8"]
+
+[node name="TestScene" type="Node2D"]
+script = ExtResource("1_0c2w8")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+mode = 2
+title = "Open a Directory"
+size = Vector2i(1920, 1000)
+visible = true
+ok_button_text = "Select Current Folder"
+file_mode = 2
+access = 2
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
+
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
