@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://r50jwbftc35"]
+[gd_scene load_steps=3 format=3 uid="uid://r50jwbftc35"]
+
+[ext_resource type="Script" path="res://Label.gd" id="1_tekdi"]
 
 [sub_resource type="GDScript" id="GDScript_gn3jp"]
 script/source = "extends Window
@@ -12,39 +14,51 @@ var monitorNumber = 0
 var displayRes = 0
 var directory = 0
 
+var timer = null
+
 func _ready():
-	dir = get_meta(\"dir\")
-	monitorNumber = get_meta(\"monitorNumber\")
-	
-	self.get_window().current_screen = monitorNumber
-	
-	displayRes = DisplayServer.screen_get_size(monitorNumber)
+	if DisplayServer.get_screen_count() >= monitorNumber+1:
+		self.get_window().current_screen = monitorNumber
+	else:
+		self.get_window().current_screen = DisplayServer.get_screen_count()-1
+	displayRes = DisplayServer.screen_get_size(self.get_window().current_screen)
 	directory = DirAccess.get_files_at(dir)
 	
 	for i in directory:
 		if \".png\" in i:
 			imageList.append(i)
 	
-	$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
 	self.mode = 3
-	print(imageList)
+	
+	timer = get_parent().get_node(\"Timer\")
+	timer.timeout.connect(timeout)
 	
 	
 func _process(delta):
 	var image = Image.new()
-	image.load(dir+\"/\"+imageList[imageNumber])
-	
+	image.load(dir+\"/\"+imageList[imageNumber%len(imageList)])
+		
 	var image_texture = ImageTexture.new()
 	image_texture.set_image(image)
-	
-	$Sprite2D.texture = image_texture
 		
+	$Sprite2D.texture = image_texture
+	
+	$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
 	$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
 	$Sprite2D.scale = Vector2(float(displayRes.x)/float(image_texture.get_width()),float(displayRes.y)/float(image_texture.get_height()))
-		
-		
-	await get_tree().create_timer(30.0).timeout
-	imageNumber +=1
+	
+	if timer.paused == true:
+		$Label.newLabel(\"||\",0)
+	elif $Label.modulate.a != 0:
+		$Label.stopLabel()
+	if Input.is_action_just_pressed(\"ui_right\") or Input.is_action_just_pressed(\"ui_left\"):
+		$Label.newLabel(str(timer.wait_time)+\" seconds\",3)
+func setVariables(mon,directory):
+	monitorNumber = mon
+	dir = directory
+	
+func timeout():
+	imageNumber += 1
 "
 
 [node name="Window" type="Window"]
@@ -56,3 +70,16 @@ metadata/dir = ""
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(120.805, 112.215)
+
+[node name="Label" type="Label" parent="."]
+top_level = true
+z_index = 2
+offset_left = 28.11
+offset_right = 253.11
+offset_bottom = 137.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 100
+text = "TEST"
+script = ExtResource("1_tekdi")

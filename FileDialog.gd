@@ -6,6 +6,18 @@ var myWindow = preload("res://window.tscn")
 func _ready():
 	$FileDialog.popup()
 	
+func _process(delta):
+	if Input.is_action_just_pressed("ui_accept"):
+		if $Timer.paused:
+			$Timer.paused = false
+		else:
+			$Timer.paused = true
+	
+	if Input.is_action_just_pressed("ui_right"):
+		$Timer.wait_time -= 1
+	if Input.is_action_just_pressed("ui_left"):
+		$Timer.wait_time += 1
+	
 
 
 func _on_file_dialog_dir_selected(dir):
@@ -21,8 +33,13 @@ func openWindows(dir,displayCount):
 	await get_tree().create_timer(1.0).timeout
 	get_viewport().gui_embed_subwindows = false
 	var d = myWindow.instantiate()
+	
+	d.setVariables(displayCount,dir)
+	
 	var dSprite = d.get_child(0)
 	add_child(d)
+	
 	d.visible = true
 	d.position = Vector2(800,800)
-	d.size = Vector2(300,300)
+	d.size = Vector2(1280,720)
+

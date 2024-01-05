@@ -8,6 +8,7 @@ script = ExtResource("1_0c2w8")
 [node name="FileDialog" type="FileDialog" parent="."]
 mode = 2
 title = "Open a Directory"
+position = Vector2i(0, 36)
 size = Vector2i(1920, 1000)
 visible = true
 ok_button_text = "Select Current Folder"
@@ -15,8 +16,6 @@ file_mode = 2
 access = 2
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 10.0
 
 [connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
