@@ -20,21 +20,25 @@ func _ready():
 	if DisplayServer.get_screen_count() >= monitorNumber+1:
 		self.get_window().current_screen = monitorNumber
 	else:
-		self.get_window().current_screen = DisplayServer.get_screen_count()-1
-	displayRes = DisplayServer.screen_get_size(self.get_window().current_screen)
+		self.get_window().current_screen = 0
+	
 	directory = DirAccess.get_files_at(dir)
 	
 	for i in directory:
 		if \".png\" in i:
 			imageList.append(i)
 	
+	self.position = Vector2(self.position.x+(monitorNumber *10),self.position.y)
 	self.mode = 3
+	
 	
 	timer = get_parent().get_node(\"Timer\")
 	timer.timeout.connect(timeout)
 	
 	
 func _process(delta):
+	displayRes = DisplayServer.screen_get_size(self.get_window().current_screen)
+	
 	var image = Image.new()
 	image.load(dir+\"/\"+imageList[imageNumber%len(imageList)])
 		
@@ -53,6 +57,12 @@ func _process(delta):
 		$Label.stopLabel()
 	if Input.is_action_just_pressed(\"ui_right\") or Input.is_action_just_pressed(\"ui_left\"):
 		$Label.newLabel(str(timer.wait_time)+\" seconds\",3)
+	if Input.is_action_just_pressed(\"ui_up\"):
+		self.mode = 3
+	if Input.is_action_just_pressed(\"ui_down\"):
+		self.mode = 0
+		self.size = Vector2(640,480)
+		print(self.position)
 func setVariables(mon,directory):
 	monitorNumber = mon
 	dir = directory

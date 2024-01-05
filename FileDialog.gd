@@ -21,7 +21,8 @@ func _process(delta):
 
 
 func _on_file_dialog_dir_selected(dir):
-	var numberOfFolders = 0
+	var numberOfFolders = 1
+	get_window().size = Vector2(200,200)
 	for file in DirAccess.get_directories_at(dir):
 		openWindows(dir+"/"+file, numberOfFolders)
 		numberOfFolders += 1
@@ -40,6 +41,5 @@ func openWindows(dir,displayCount):
 	add_child(d)
 	
 	d.visible = true
-	d.position = Vector2(800,800)
-	d.size = Vector2(1280,720)
+	d.size = Vector2(640,480)
 

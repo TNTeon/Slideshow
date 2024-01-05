@@ -1,10 +1,11 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1704478694
+::res://::1704484526
 Backboard.png::CompressedTexture2D::1374416253691337804::1704405239::1704405239::1::::<><>::
 export_presets.cfg::TextFile::-1::1704410165::0::1::::<><>::
-FileDialog.gd::GDScript::-1::1704437117::0::1::::<>Node2D<>::
+FileDialog.gd::GDScript::-1::1704482660::0::1::::<>Node2D<>::
 icon.svg::CompressedTexture2D::807988896665248108::1704402755::1704402762::1::::<><>::
-Label.gd::GDScript::-1::1704440911::0::1::::<>Label<>::
-NeedMoreMon.png::CompressedTexture2D::6901526006478613259::1704440088::1704440529::1::::<><>::
-test_scene.tscn::PackedScene::1409084125190664242::1704442054::0::1::::<><>::res://FileDialog.gd
-window.tscn::PackedScene::36961083198348134::1704441913::0::1::::<><>::res://Label.gd
+Label.gd::GDScript::-1::1704479359::0::1::::<>Label<>::
+Logo Color Tr No Words.png::CompressedTexture2D::7940335772974217915::1704484511::1704484533::1::::<><>::
+NeedMoreMon.png::CompressedTexture2D::6901526006478613259::1704479359::1704479359::1::::<><>::
+test_scene.tscn::PackedScene::1409084125190664242::1704483080::0::1::::<><>::res://FileDialog.gd
+window.tscn::PackedScene::36961083198348134::1704482956::0::1::::<><>::res://Label.gd
