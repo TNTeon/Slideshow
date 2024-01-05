@@ -44,7 +44,8 @@ func _process(delta):
 		
 		
 	await get_tree().create_timer(30.0).timeout
-	imageNumber +=1"
+	imageNumber +=1
+"
 
 [node name="Window" type="Window"]
 position = Vector2i(0, 36)

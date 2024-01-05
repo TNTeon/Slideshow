@@ -40,7 +40,6 @@ func openWindows(dir,displayCount):
 	d.mode = 3
 	
 	$Timer.start()
-	
 	while true:
 		var image = Image.new()
 		image.load(dir+"/"+imageList[imageNumber])
