@@ -67,8 +67,8 @@ func _process(delta):
 			video.file = dir+\"/\"+imageList[imageNumber%len(imageList)]
 			$VideoStreamPlayer.stream = load(video.file)
 			$VideoStreamPlayer.play()
-			$VideoStreamPlayer.position = Vector2(0,0)#Vector2(displayRes.x/2,displayRes.y/2)
-			$VideoStreamPlayer.scale = Vector2(float(displayRes.x)/float($VideoStreamPlayer.get_video_texture().get_width()),float(displayRes.y)/float($VideoStreamPlayer.get_video_texture().get_height()))
+		$VideoStreamPlayer.position = Vector2(0,0)#Vector2(displayRes.x/2,displayRes.y/2)
+		$VideoStreamPlayer.scale = Vector2(float(displayRes.x)/float($VideoStreamPlayer.get_video_texture().get_width()),float(displayRes.y)/float($VideoStreamPlayer.get_video_texture().get_height()))
 		
 	#----------------INPUTS------------
 	if timer.paused == true:
