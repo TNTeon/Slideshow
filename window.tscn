@@ -16,6 +16,9 @@ var directory = 0
 
 var timer = null
 
+var delayFromVid = false
+
+#----------------INIT------------
 func _ready():
 	if DisplayServer.get_screen_count() >= monitorNumber+1:
 		self.get_window().current_screen = monitorNumber
@@ -25,7 +28,7 @@ func _ready():
 	directory = DirAccess.get_files_at(dir)
 	
 	for i in directory:
-		if \".png\" in i:
+		if \".png\" or \".ogv\" in i:
 			imageList.append(i)
 	
 	self.position = Vector2(self.position.x+(monitorNumber *10),self.position.y)
@@ -35,26 +38,47 @@ func _ready():
 	timer = get_parent().get_node(\"Timer\")
 	timer.timeout.connect(timeout)
 	
-	
+#----------------EVERY-FRAME------------
 func _process(delta):
 	displayRes = DisplayServer.screen_get_size(self.get_window().current_screen)
-	
-	var image = Image.new()
-	image.load(dir+\"/\"+imageList[imageNumber%len(imageList)])
+	#----------------IMAGES------------
+	if \".png\" in dir+\"/\"+imageList[imageNumber%len(imageList)]:
+		$VideoStreamPlayer.visible = false
+		$Sprite2D.visible = true
+		var image = Image.new()
+		image.load(dir+\"/\"+imageList[imageNumber%len(imageList)])
+			
+		var image_texture = ImageTexture.new()
+		image_texture.set_image(image)
+			
+		$Sprite2D.texture = image_texture
 		
-	var image_texture = ImageTexture.new()
-	image_texture.set_image(image)
+		$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
+		$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
+		$Sprite2D.scale = Vector2(float(displayRes.x)/float(image_texture.get_width()),float(displayRes.y)/float(image_texture.get_height()))
+	#----------------VIDEOS------------
+	else:
+		if $VideoStreamPlayer.stream == null:
+			$Sprite2D.visible = false
+			$VideoStreamPlayer.visible = true
+			
+			delayFromVid = true
+			var video = VideoStream.new()
+			video.file = dir+\"/\"+imageList[imageNumber%len(imageList)]
+			$VideoStreamPlayer.stream = load(video.file)
+			$VideoStreamPlayer.play()
+			$VideoStreamPlayer.position = Vector2(0,0)#Vector2(displayRes.x/2,displayRes.y/2)
+			$VideoStreamPlayer.scale = Vector2(float(displayRes.x)/float($VideoStreamPlayer.get_video_texture().get_width()),float(displayRes.y)/float($VideoStreamPlayer.get_video_texture().get_height()))
 		
-	$Sprite2D.texture = image_texture
-	
-	$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
-	$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
-	$Sprite2D.scale = Vector2(float(displayRes.x)/float(image_texture.get_width()),float(displayRes.y)/float(image_texture.get_height()))
-	
+	#----------------INPUTS------------
 	if timer.paused == true:
 		$Label.newLabel(\"||\",0)
+		if $VideoStreamPlayer.stream != null:
+			$VideoStreamPlayer.paused = true
 	elif $Label.modulate.a != 0:
 		$Label.stopLabel()
+		if $VideoStreamPlayer.stream != null:
+			$VideoStreamPlayer.paused = false
 	if Input.is_action_just_pressed(\"ui_right\") or Input.is_action_just_pressed(\"ui_left\"):
 		$Label.newLabel(str(timer.wait_time)+\" seconds\",3)
 	if Input.is_action_just_pressed(\"ui_up\"):
@@ -68,6 +92,17 @@ func setVariables(mon,directory):
 	dir = directory
 	
 func timeout():
+	if $VideoStreamPlayer.stream == null and delayFromVid == false:
+		imageNumber += 1
+		print(\"Next\")
+	elif $VideoStreamPlayer.stream == null and delayFromVid == true:
+		delayFromVid = false
+		print(\"Delay\")
+	else:
+		print(\"NOT NEXT\")
+
+func _on_video_stream_player_finished():
+	$VideoStreamPlayer.stream = null
 	imageNumber += 1
 "
 
@@ -93,3 +128,9 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 100
 text = "TEST"
 script = ExtResource("1_tekdi")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[connection signal="finished" from="VideoStreamPlayer" to="." method="_on_video_stream_player_finished"]
