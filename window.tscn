@@ -28,9 +28,9 @@ func _ready():
 	directory = DirAccess.get_files_at(dir)
 	
 	for i in directory:
-		if \".png\" or \".ogv\" in i:
+		if \".png\" in i or \".ogv\" in i or \".PNG\" in i or \".OGV\" in i:
 			imageList.append(i)
-	
+	print(imageList)
 	self.position = Vector2(self.position.x+(monitorNumber *10),self.position.y)
 	self.mode = 3
 	
@@ -42,7 +42,7 @@ func _ready():
 func _process(delta):
 	displayRes = DisplayServer.screen_get_size(self.get_window().current_screen)
 	#----------------IMAGES------------
-	if \".png\" in dir+\"/\"+imageList[imageNumber%len(imageList)]:
+	if (\".png\" in dir+\"/\"+imageList[imageNumber%len(imageList)]) or (\".PNG\" in dir+\"/\"+imageList[imageNumber%len(imageList)]):
 		$VideoStreamPlayer.visible = false
 		$Sprite2D.visible = true
 		var image = Image.new()
@@ -57,7 +57,7 @@ func _process(delta):
 		$Sprite2D.position = Vector2(displayRes.x/2,displayRes.y/2)
 		$Sprite2D.scale = Vector2(float(displayRes.x)/float(image_texture.get_width()),float(displayRes.y)/float(image_texture.get_height()))
 	#----------------VIDEOS------------
-	else:
+	elif (\".ogv\" in dir+\"/\"+imageList[imageNumber%len(imageList)]) or (\".OGV\" in dir+\"/\"+imageList[imageNumber%len(imageList)]):
 		if $VideoStreamPlayer.stream == null:
 			$Sprite2D.visible = false
 			$VideoStreamPlayer.visible = true
